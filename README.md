@@ -1,7 +1,7 @@
 # Active Home Landing Page
 
-This repository hosts the landing page for Active Home, an iOS app.
+This repository hosts the landing page for [Active Home](https://github.com/megahertz8/activehome) — open source AI that turns any phone into a home energy scanner.
 
-The page includes a waitlist form and is styled for public viewing.
+🌐 **Live site:** [megahertz8.github.io/activehome-site](https://megahertz8.github.io/activehome-site/)
 
-Visit the live site at: [GitHub Pages URL]
+📱 **Main repo:** [megahertz8/activehome](https://github.com/megahertz8/activehome)
