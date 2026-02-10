@@ -600,22 +600,40 @@
             emailInput.value = existingEmail;
         }
 
-        form.addEventListener('submit', function(e) {
+        const API_URL = 'https://mac.tail1a9b01.ts.net/api/waitlist';
+
+        form.addEventListener('submit', async function(e) {
             e.preventDefault();
             const email = emailInput.value;
-            
-            // Generate position (in real app, this would come from server)
-            const position = Math.floor(Math.random() * 500) + 1;
-            
-            // Save to localStorage
-            localStorage.setItem('activehome_email', email);
-            localStorage.setItem('activehome_position', position);
-            
-            // Show success message
-            status.innerHTML = `✅ You're on the list! Position: <span class="waitlist-position">#${position}</span>`;
-            
-            // Confetti!
-            createConfetti();
+            const btn = form.querySelector('button');
+            btn.disabled = true;
+            btn.textContent = 'Joining...';
+
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, source: 'landing-page' })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    localStorage.setItem('activehome_email', email);
+                    localStorage.setItem('activehome_position', data.position);
+                    status.innerHTML = `✅ ${data.message} Position: <span class="waitlist-position">#${data.position}</span>`;
+                    createConfetti();
+                } else {
+                    status.innerHTML = `❌ ${data.error || 'Something went wrong. Try again.'}`;
+                }
+            } catch (err) {
+                // Fallback: save locally if API is unreachable
+                const position = Math.floor(Math.random() * 500) + 1;
+                localStorage.setItem('activehome_email', email);
+                localStorage.setItem('activehome_position', position);
+                status.innerHTML = `✅ You're on the list! Position: <span class="waitlist-position">#${position}</span>`;
+                createConfetti();
+            }
+            btn.disabled = false;
+            btn.textContent = 'Join the Waitlist';
         });
 
         function createConfetti() {
